@@ -1,4 +1,5 @@
 import { Module, OnModuleInit } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -8,9 +9,17 @@ import { PositionsModule } from './modules/positions/positions.module';
 import { PositionsService } from './modules/positions/positions.service';
 import { TechnologiesModule } from './modules/technologies/technologies.module';
 import { TechnologiesService } from './modules/technologies/technologies.service';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
-  imports: [DatabaseModule, UsersModule, PositionsModule, TechnologiesModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    DatabaseModule,
+    UsersModule,
+    PositionsModule,
+    TechnologiesModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

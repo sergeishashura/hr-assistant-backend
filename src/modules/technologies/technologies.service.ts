@@ -64,7 +64,6 @@ export class TechnologiesService {
         { name: 'Nim' },
         { name: 'Crystal' },
       ]);
-      console.log('Technologies seeded');
     }
   }
 }

@@ -4,6 +4,7 @@ import {
   UnauthorizedException,
   BadRequestException,
 } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { In, Repository } from 'typeorm';
@@ -26,7 +27,7 @@ export class UsersService {
     private readonly techRepo: Repository<Technology>,
   ) {}
 
-  async register(dto: CreateUserDto): Promise<User> {
+  async register(dto: CreateUserDto): Promise<void> {
     const existing = await this.usersRepo.findOne({
       where: { username: dto.username },
     });
@@ -57,16 +58,22 @@ export class UsersService {
       );
     }
 
-    const user = this.usersRepo.create(dto);
-    return this.usersRepo.save(user);
+    const hashedPassword = await bcrypt.hash(dto.password, 10);
+
+    const user = this.usersRepo.create({
+      ...dto,
+      password: hashedPassword,
+    });
+
+    this.usersRepo.save(user);
   }
 
-  async login(dto: UserLoginDto): Promise<User> {
+  async findByUsername(username: string): Promise<User> {
     const user = await this.usersRepo.findOne({
-      where: { username: dto.username },
+      where: { username },
     });
-    if (!user || user.password !== dto.password)
-      throw new UnauthorizedException('Invalid credentials');
+
+    if (!user) throw new UnauthorizedException('There is no such user');
 
     return user;
   }
