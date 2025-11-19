@@ -10,12 +10,14 @@ import { PositionsService } from './modules/positions/positions.service';
 import { TechnologiesModule } from './modules/technologies/technologies.module';
 import { TechnologiesService } from './modules/technologies/technologies.service';
 import { AuthModule } from './modules/auth/auth.module';
+import { ChatsModule } from './modules/chat/chat.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
     UsersModule,
+    ChatsModule,
     PositionsModule,
     TechnologiesModule,
     AuthModule,
