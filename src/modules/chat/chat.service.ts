@@ -12,10 +12,22 @@ export class ChatService {
     @InjectRepository(Message) private msgRepo: Repository<Message>,
   ) {}
 
-  async createChat() {
-    const chat = this.chatRepo.create();
+  async getChatById(id: number) {
+    return this.chatRepo.findOne({
+      where: { id },
+    });
+  }
+
+  async createChat(title: string) {
+    const chat = this.chatRepo.create({ title });
     await this.chatRepo.save(chat);
     return chat;
+  }
+
+  async getAllChats() {
+    return this.chatRepo.find({
+      order: { id: 'DESC' },
+    });
   }
 
   async getChatHistory(chatId: number) {
@@ -52,9 +64,9 @@ export class ChatService {
       text: question,
     });
 
-    await this.msgRepo.save(msg);
+    const saved = await this.msgRepo.save(msg);
 
-    return { question };
+    return saved;
   }
 
   async evaluate(chatId: number, question: string, user_answer: string) {
@@ -79,7 +91,7 @@ export class ChatService {
       }),
     );
 
-    await this.msgRepo.save(
+    const restMessage = await this.msgRepo.save(
       this.msgRepo.create({
         chat: { id: chatId },
         role: 'system',
@@ -87,6 +99,10 @@ export class ChatService {
       }),
     );
 
-    return res.data;
+    return {
+      ...res.data,
+      id: restMessage.id,
+      created_at: restMessage.created_at,
+    };
   }
 }

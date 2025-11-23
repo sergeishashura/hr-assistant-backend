@@ -5,9 +5,19 @@ import { ChatService } from './chat.service';
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
+  @Get(':id')
+  getChatById(@Param('id') id: number) {
+    return this.chatService.getChatById(id);
+  }
+
   @Post('create')
-  createChat() {
-    return this.chatService.createChat();
+  createChat(@Body() body: { title: string }) {
+    return this.chatService.createChat(body.title ?? 'Новый чат');
+  }
+
+  @Get()
+  getAllChats() {
+    return this.chatService.getAllChats();
   }
 
   @Get(':id/history')

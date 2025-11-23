@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { Chat } from './chat.entity';
+import { unixTransformer } from 'src/utils/timeFormatter';
 
 @Entity()
 export class Message {
@@ -21,6 +22,9 @@ export class Message {
   @Column('text')
   text: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({
+    type: 'int',
+    transformer: unixTransformer,
+  })
+  created_at: number;
 }
