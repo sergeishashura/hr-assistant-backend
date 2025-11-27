@@ -1,4 +1,4 @@
 export const unixTransformer = {
-  to: () => Math.floor(Date.now() / 1000),
+  to: () => Date.now(),
   from: (value: number) => value,
 };
