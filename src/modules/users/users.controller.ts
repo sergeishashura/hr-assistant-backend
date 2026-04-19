@@ -1,9 +1,17 @@
-import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  UseGuards,
+  Patch,
+  Req,
+} from '@nestjs/common';
 
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UserLoginDto } from './dto/user-login.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('api/users')
 export class UsersController {
@@ -16,8 +24,17 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile() {
-    return { message: 'This route is protected!' };
+  getProfile(@Req() req: { user: { userId: number } }) {
+    return this.usersService.getProfile(req.user.userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('profile')
+  updateProfile(
+    @Req() req: { user: { userId: number } },
+    @Body() dto: UpdateUserDto,
+  ) {
+    return this.usersService.updateProfile(req.user.userId, dto);
   }
 
   @Get()

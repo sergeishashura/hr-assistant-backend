@@ -5,9 +5,11 @@ import {
   OneToMany,
   Column,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Message } from './message.entity';
 import { unixTransformer } from 'src/utils/timeFormatter';
+import { User } from 'src/modules/users/entities/user.entity';
 
 @Entity()
 export class Chat {
@@ -16,6 +18,9 @@ export class Chat {
 
   @Column({ default: '' })
   title: string;
+
+  @ManyToOne(() => User, { nullable: true })
+  user: User;
 
   @CreateDateColumn({
     type: 'int',

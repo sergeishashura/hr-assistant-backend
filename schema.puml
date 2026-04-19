@@ -1,0 +1,51 @@
+@startuml
+
+!define Table(name,desc) class name as desc << (T,#FFAAAA) >>
+hide methods
+hide stereotypes
+
+' -------------------
+' USERS TABLE
+' -------------------
+Table(User, "users") {
+  + id : int <<PK>>
+  firstName : string
+  lastName : string
+  position : int
+  techStack : number[] (JSON text)
+  username : string <<unique>>
+  password : string
+}
+
+' -------------------
+' CHAT TABLE
+' -------------------
+Table(Chat, "chat") {
+  + id : int <<PK>>
+  title : string
+  created_at : int
+  updated_at : int
+}
+
+' -------------------
+' MESSAGE TABLE
+' -------------------
+Table(Message, "message") {
+  + id : int <<PK>>
+  chat_id : int <<FK>>
+  role : string
+  text : text
+  created_at : int
+}
+
+' -------------------
+' RELATIONSHIPS
+' -------------------
+
+' Chat (1) --- (M) Message
+Chat ||--o{ Message : "messages"
+
+' Message (M) --- (1) Chat
+Message }o--|| Chat : "chat"
+
+@enduml
